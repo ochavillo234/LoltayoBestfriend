@@ -11,8 +11,9 @@
     /* Circle timer container */
     .circle-container {
       position: relative;
-      width: 300px;
-      height: 300px;
+      width: 80vw;
+      max-width: 300px;
+      aspect-ratio: 1/1;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -24,20 +25,27 @@
       position: absolute;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
       transform: rotate(-90deg);
     }
     .circle-bg {
       stroke: rgba(255,255,255,0.15);
-      stroke-width: 12;
+      stroke-width: 8;
       fill: none;
     }
     .circle-progress {
       stroke: #facc15; /* yellow-400 glow */
-      stroke-width: 12;
+      stroke-width: 8;
       fill: none;
       stroke-linecap: round;
       filter: drop-shadow(0 0 8px #facc15);
       transition: stroke-dashoffset 1s linear;
+    }
+
+    /* Responsive typography */
+    h2, p, button {
+      word-break: break-word;
     }
   </style>
 </head>
@@ -51,66 +59,50 @@
   </div>
 
   <!-- Match Found Popup -->
-  <div id="match-popup" class="fixed inset-0 flex items-center justify-center z-40">
+  <div id="match-popup" class="fixed inset-0 flex items-center justify-center z-40 p-4">
     <div class="circle-container transform scale-90 opacity-0">
       <!-- Circular progress border -->
-      <svg width="300" height="300">
+      <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet">
         <circle class="circle-bg" cx="150" cy="150" r="140"></circle>
         <circle class="circle-progress" cx="150" cy="150" r="140"></circle>
       </svg>
 
       <!-- Content inside circle -->
-      <div class="relative text-center">
-        <h2 class="text-3xl font-bold text-yellow-300 mb-4">RA LARO</h2>
-        <div class="flex justify-center gap-4">
-          <button id="acceptBtn" class="px-5 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-lg font-bold shadow-lg">ACCEPT</button>
-          <button id="declineBtn" class="px-5 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-lg font-bold shadow-lg">DECLINE</button>
+      <div class="relative text-center px-2">
+        <h2 class="text-xl sm:text-3xl font-bold text-yellow-300 mb-3">RA LARO</h2>
+        <div class="flex flex-col sm:flex-row justify-center gap-3">
+          <button id="acceptBtn" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-base sm:text-lg font-bold shadow-lg">ACCEPT</button>
+          <button id="declineBtn" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-base sm:text-lg font-bold shadow-lg">DECLINE</button>
         </div>
       </div>
     </div>
   </div>
 
  <!-- After Accept -->
-<div id="accepted" class="hidden fixed inset-0 flex items-center justify-center bg-black/95 z-50">
-
-  <!-- Container -->
-  <div class="relative max-w-3xl mx-auto p-10 rounded-2xl 
+<div id="accepted" class="hidden fixed inset-0 flex items-center justify-center bg-black/95 z-50 p-4">
+  <div class="relative w-full max-w-3xl p-6 sm:p-10 rounded-2xl 
               bg-gradient-to-b from-[#1a1a1a]/95 via-[#101010]/95 to-[#000]/95
               border-4 border-yellow-400/80 shadow-[0_0_40px_rgba(250,204,21,0.6)] text-center">
 
-    <!-- Glowing Aura -->
     <div class="absolute -inset-1 rounded-2xl border-2 border-yellow-400/50 blur-lg animate-pulse"></div>
 
-    <!-- Title -->
-    <h2 class="relative text-4xl font-extrabold text-yellow-300 mb-6 tracking-wider 
+    <h2 class="relative text-2xl sm:text-4xl font-extrabold text-yellow-300 mb-4 sm:mb-6 tracking-wider 
                drop-shadow-[0_0_15px_#facc15] uppercase">
       ⚔️ A Pact Forged
     </h2>
 
-    <!-- Epic Text -->
-    <p class="relative text-xl text-gray-200 leading-relaxed font-serif drop-shadow-md">
+    <p class="relative text-base sm:text-xl text-gray-200 leading-relaxed font-serif drop-shadow-md">
       A pact of <span class="text-red-400 font-bold">blood</span>, 
       <span class="text-blue-400 font-bold">sweat</span>, 
       and <span class="text-purple-400 font-bold italic">tilted tears</span>. <br><br>
-      
       From this moment forward, we ride into 
       <span class="text-blue-300 font-extrabold">Summoner’s Rift</span> not as two players, 
-      but as one <span class="text-yellow-400 font-semibold">duo</span>, united against 
-      <span class="text-red-400">feeders</span>, 
-      <span class="text-purple-400">smurfs</span>, 
-      and that one <span class="text-green-400 font-bold">sonamabitch</span> who thinks he’s funny. <br><br>
-      
-      Best friend, I thank you for 
-      <span class="text-yellow-300 font-extrabold">accepting</span> my invitation. 
-      Together, we shall climb… or more realistically, 
-      together we shall <span class="text-red-500 font-bold">flame the jungler</span>. <br><br>
-      
+      but as one <span class="text-yellow-400 font-semibold">duo</span>...<br><br>
       Now… lock in your champ, and let 
       <span class="text-yellow-400 font-bold tracking-widest uppercase">destiny</span> begin!
     </p>
 
-    <!-- Footer dramatic line -->
-    <div class="relative mt-8 text-yellow-300 font-extrabold text-2xl tracking-widest 
+    <div class="relative mt-6 sm:mt-8 text-yellow-300 font-extrabold text-lg sm:text-2xl tracking-widest 
                 drop-shadow-[0_0_12px_#facc15] animate-pulse">
       ✨ United We Tilt, United We Climb ✨
       <br>Ra Open kana BOBO</br>
@@ -118,101 +110,78 @@
   </div>
 </div>
 
-
 <!-- After Decline -->
-<div id="declined" class="hidden fixed inset-0 flex items-center justify-center bg-black/95 z-50">
-
-  <!-- Container -->
-  <div class="relative max-w-2xl mx-auto p-8 rounded-2xl bg-gradient-to-b from-[#0f0f0f]/95 via-[#1a1a1a]/95 to-[#0f0f0f]/95 
+<div id="declined" class="hidden fixed inset-0 flex items-center justify-center bg-black/95 z-50 p-4">
+  <div class="relative w-full max-w-2xl p-6 sm:p-8 rounded-2xl bg-gradient-to-b from-[#0f0f0f]/95 via-[#1a1a1a]/95 to-[#0f0f0f]/95 
               border-4 border-yellow-400/70 shadow-[0_0_30px_rgba(250,204,21,0.6)] text-center">
 
-    <!-- League Gold Glowing Border -->
     <div class="absolute -inset-1 rounded-2xl border-2 border-yellow-400/40 blur-lg animate-pulse"></div>
 
-    <!-- Title -->
-    <h2 class="relative text-3xl font-extrabold text-yellow-300 mb-6 tracking-wide drop-shadow-[0_0_8px_#facc15]">
+    <h2 class="relative text-2xl sm:text-3xl font-extrabold text-yellow-300 mb-4 sm:mb-6 tracking-wide drop-shadow-[0_0_8px_#facc15]">
       ❌ Summoner’s Betrayal
       <br>Putangina mo traydorrrrrrr</br>
     </h2>
 
-    <!-- Story Text -->
-    <p class="relative text-lg text-gray-200 leading-relaxed font-serif drop-shadow-md">
+    <p class="relative text-base sm:text-lg text-gray-200 leading-relaxed font-serif drop-shadow-md">
       Ahem… my dear <span class="text-yellow-400 font-semibold">summoner</span>, my so-called <span class="italic">best friend</span>.<br><br>
       Today, you have committed the <span class="text-red-400 font-bold">greatest betrayal</span> known to man. 
       Not stealing my food, not spoiling anime endings… no.<br><br>
-      You <span class="text-yellow-500 font-bold underline">declined</span> my sacred invitation to play 
-      <span class="text-blue-400 font-extrabold">League of Legends</span>.<br><br>
-      Do you realize what that means? While I march into battle on the Rift, risking 
-      <span class="text-green-400 font-bold">LP</span>, dodging inting teammates,
-      and enduring <span class="text-red-500">toxic chats</span>, you chose… <span class="italic">peace</span>. 
-      Sleep. Or worse… <span class="text-purple-400 font-bold">another game</span>.
+      You <span class="text-yellow-500 font-bold underline">declined</span> my sacred invitation... 
     </p>
 
-    <!-- Footer dramatic line -->
-    <div class="relative mt-8 text-yellow-300 font-bold text-xl tracking-wide drop-shadow-[0_0_8px_#facc15] animate-pulse">
+    <div class="relative mt-6 sm:mt-8 text-yellow-300 font-bold text-lg sm:text-xl tracking-wide drop-shadow-[0_0_8px_#facc15] animate-pulse">
       Your absence will echo across the Rift...
     </div>
   </div>
 </div>
 
+<script>
+  window.addEventListener("load", () => {
+    const popup = document.getElementById("match-popup");
+    const popupBox = popup.querySelector(".circle-container");
+    const circle = document.querySelector(".circle-progress");
 
-But even though you abandoned me in this desperate hour,
- I forgive you. Because a true best friend doesn’t just duo in League they stay connected beyond the Rift. 
- So, the next time you hear that iconic ‘RA LARO’ sound, remember this speech. 
- And may your Wi-Fi lag the moment you play without me. Thank you." TANGINA MO TRAYDORRRRRR!!!!!!!!!!
-  </div>
+    const accepted = document.getElementById("accepted");
+    const declined = document.getElementById("declined");
 
-  <script>
-    window.addEventListener("load", () => {
-      const popup = document.getElementById("match-popup");
-      const popupBox = popup.querySelector(".circle-container");
-      const circle = document.querySelector(".circle-progress");
+    let countdown = 15;
+    const radius = 140;
+    const circumference = 2 * Math.PI * radius;
+    circle.style.strokeDasharray = circumference;
+    circle.style.strokeDashoffset = 0;
 
-      const accepted = document.getElementById("accepted");
-      const declined = document.getElementById("declined");
+    setTimeout(() => {
+      popupBox.style.opacity = "1";
+      popupBox.style.transform = "scale(1)";
 
-      let countdown = 15;
-      const radius = 140;
-      const circumference = 2 * Math.PI * radius;
-      circle.style.strokeDasharray = circumference;
-      circle.style.strokeDashoffset = 0;
+      let timer = setInterval(() => {
+        countdown--;
+        const offset = circumference - (countdown / 15) * circumference;
+        circle.style.strokeDashoffset = offset;
 
-      setTimeout(() => {
-        popupBox.style.opacity = "1";
-        popupBox.style.transform = "scale(1)";
-
-        // Start circle countdown
-        let timer = setInterval(() => {
-          countdown--;
-          const offset = circumference - (countdown / 15) * circumference;
-          circle.style.strokeDashoffset = offset;
-
-          if (countdown <= 0) {
-            clearInterval(timer);
-            decline();
-          }
-        }, 1000);
-
-        // Accept button
-        document.getElementById("acceptBtn").addEventListener("click", () => {
-          clearInterval(timer);
-          popup.style.display = "none";
-          accepted.classList.remove("hidden");
-        });
-
-        // Decline button
-        document.getElementById("declineBtn").addEventListener("click", () => {
+        if (countdown <= 0) {
           clearInterval(timer);
           decline();
-        });
-
-        function decline() {
-          popup.style.display = "none";
-          declined.classList.remove("hidden");
         }
-      }, 300); // delay for popup animation
-    });
-  </script>
+      }, 1000);
 
+      document.getElementById("acceptBtn").addEventListener("click", () => {
+        clearInterval(timer);
+        popup.style.display = "none";
+        accepted.classList.remove("hidden");
+      });
+
+      document.getElementById("declineBtn").addEventListener("click", () => {
+        clearInterval(timer);
+        decline();
+      });
+
+      function decline() {
+        popup.style.display = "none";
+        declined.classList.remove("hidden");
+      }
+    }, 300);
+  });
+</script>
 </body>
 </html>
