@@ -1,2 +1,1 @@
-"# RaGaLol" 
-"# LoltayoBestfriend" 
+ "# LoltayoBestfriend" 
