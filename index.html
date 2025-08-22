@@ -183,5 +183,67 @@
     }, 300);
   });
 </script>
+
+<script>
+  window.addEventListener("load", () => {
+    const popup = document.getElementById("match-popup");
+    const popupBox = popup.querySelector(".circle-container");
+    const circle = document.querySelector(".circle-progress");
+
+    const accepted = document.getElementById("accepted");
+    const declined = document.getElementById("declined");
+
+    let countdown = 15;
+    const radius = 140;
+    const circumference = 2 * Math.PI * radius;
+    circle.style.strokeDasharray = circumference;
+    circle.style.strokeDashoffset = 0;
+
+    setTimeout(() => {
+      popupBox.style.opacity = "1";
+      popupBox.style.transform = "scale(1)";
+
+      let timer = setInterval(() => {
+        countdown--;
+        const offset = circumference - (countdown / 15) * circumference;
+        circle.style.strokeDashoffset = offset;
+
+        if (countdown <= 0) {
+          clearInterval(timer);
+          decline();
+        }
+      }, 1000);
+
+      document.getElementById("acceptBtn").addEventListener("click", () => {
+        clearInterval(timer);
+        popup.style.display = "none";
+        accepted.classList.remove("hidden");
+
+        // Open Messenger with prefilled message
+        window.open(
+          "https://www.facebook.com/messages/t/9742696475822972?message=I%20accepted%20the%20match!",
+          "_blank"
+        );
+      });
+
+      document.getElementById("declineBtn").addEventListener("click", () => {
+        clearInterval(timer);
+        decline();
+
+        // Open Messenger with prefilled message
+        window.open(
+          "https://www.facebook.com/messages/t/9742696475822972?message=I%20declined%20the%20match!",
+          "_blank"
+        );
+      });
+
+      function decline() {
+        popup.style.display = "none";
+        declined.classList.remove("hidden");
+      }
+    }, 300);
+  });
+</script>
+
 </body>
 </html>
