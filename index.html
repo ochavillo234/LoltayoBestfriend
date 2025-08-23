@@ -1,252 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>League Match Found</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    #match-popup { transition: opacity 0.5s ease, transform 0.5s ease; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>League Match Found</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body { margin:0; font-family:sans-serif; background:black; overflow:hidden; }
 
-    /* Circle timer container */
-    .circle-container {
-      position: relative;
-      width: 80vw;
-      max-width: 300px;
-      aspect-ratio: 1/1;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at center, rgba(20,20,20,0.95), rgba(0,0,0,0.95));
-      box-shadow: 0 0 30px rgba(250, 204, 21, 0.8);
-    }
-    .circle-container svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      transform: rotate(-90deg);
-    }
-    .circle-bg {
-      stroke: rgba(255,255,255,0.15);
-      stroke-width: 8;
-      fill: none;
-    }
-    .circle-progress {
-      stroke: #facc15; /* yellow-400 glow */
-      stroke-width: 8;
-      fill: none;
-      stroke-linecap: round;
-      filter: drop-shadow(0 0 8px #facc15);
-      transition: stroke-dashoffset 1s linear;
-    }
+#bg {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.8s ease-in-out;
+  z-index: -1;
+}
 
-    /* Responsive typography */
-    h2, p, button {
-      word-break: break-word;
-    }
-  </style>
+.circle-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #111, #000);
+  box-shadow: 0 0 30px rgba(250,204,21,0.7);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+circle {
+  fill: none;
+  stroke-width: 10;
+}
+
+.circle-bg { stroke: rgba(255,255,255,0.15); }
+.circle-progress { 
+  stroke: #facc15;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px #facc15);
+}
+
+.circle-content {
+  position: relative;
+  text-align: center;
+  z-index: 10;
+  color: #facc15;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circle-content button {
+  margin: 5px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.accept { background:#16a34a; color:white; }
+.accept:hover { background:#22c55e; }
+.decline { background:#dc2626; color:white; }
+.decline:hover { background:#ef4444; }
+
+.accepted-screen, .declined-screen {
+  position: fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:50;
+  font-weight:bold;
+  font-family:sans-serif;
+  text-align:center;
+  padding:2rem;
+  flex-direction:column;
+}
+
+.accepted-screen {
+  background: linear-gradient(to bottom, rgba(26,26,26,0.95), rgba(0,0,0,0.95));
+  color: #facc15;
+  font-size:2rem;
+  border:4px solid #facc15;
+  border-radius:2rem;
+  box-shadow:0 0 40px rgba(250,204,21,0.6);
+}
+
+.declined-screen {
+  background: linear-gradient(to bottom, rgba(15,15,15,0.95), rgba(26,26,26,0.95));
+  color: #dc2626;
+  font-size:2rem;
+  border:4px solid #facc15;
+  border-radius:2rem;
+  box-shadow:0 0 30px rgba(250,204,21,0.6);
+}
+</style>
 </head>
-<body class="bg-black">
+<body>
 
-  <!-- Background with Yasuo -->
-  <div class="fixed inset-0 bg-cover bg-center bg-no-repeat"
-       style="background-image: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yasuo_0.jpg');">
-    <!-- Dark overlay -->
-    <div class="absolute inset-0 bg-black/70"></div>
-  </div>
+<!-- Background -->
+<div id="bg"></div>
 
-  <!-- Match Found Popup -->
-  <div id="match-popup" class="fixed inset-0 flex items-center justify-center z-40 p-4">
-    <div class="circle-container transform scale-90 opacity-0">
-      <!-- Circular progress border -->
-      <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet">
-        <circle class="circle-bg" cx="150" cy="150" r="140"></circle>
-        <circle class="circle-progress" cx="150" cy="150" r="140"></circle>
-      </svg>
-
-      <!-- Content inside circle -->
-      <div class="relative text-center px-2">
-        <h2 class="text-xl sm:text-3xl font-bold text-yellow-300 mb-3">RA LARO</h2>
-        <div class="flex flex-col sm:flex-row justify-center gap-3">
-          <button id="acceptBtn" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-base sm:text-lg font-bold shadow-lg">ACCEPT</button>
-          <button id="declineBtn" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-base sm:text-lg font-bold shadow-lg">DECLINE</button>
-        </div>
+<!-- Match Popup -->
+<div id="match-popup" class="fixed inset-0 flex items-center justify-center">
+  <div class="circle-container scale-90 opacity-0">
+    <svg viewBox="0 0 300 300">
+      <circle class="circle-bg" cx="150" cy="150" r="140"></circle>
+      <circle class="circle-progress" cx="150" cy="150" r="140"></circle>
+    </svg>
+    <div class="circle-content">
+      <div class="text-center text-xl mb-3">Ra Laro Bestfriend</div>
+      <div>
+        <button class="accept" id="acceptBtn">ACCEPT</button>
+        <button class="decline" id="declineBtn">DECLINE</button>
       </div>
     </div>
   </div>
-
- <!-- After Accept -->
-<div id="accepted" class="hidden fixed inset-0 flex items-center justify-center bg-black/95 z-50 p-4">
-  <div class="relative w-full max-w-3xl p-6 sm:p-10 rounded-2xl 
-              bg-gradient-to-b from-[#1a1a1a]/95 via-[#101010]/95 to-[#000]/95
-              border-4 border-yellow-400/80 shadow-[0_0_40px_rgba(250,204,21,0.6)] text-center">
-
-    <div class="absolute -inset-1 rounded-2xl border-2 border-yellow-400/50 blur-lg animate-pulse"></div>
-
-    <h2 class="relative text-2xl sm:text-4xl font-extrabold text-yellow-300 mb-4 sm:mb-6 tracking-wider 
-               drop-shadow-[0_0_15px_#facc15] uppercase">
-      ⚔️ A Pact Forged
-    </h2>
-
-    <p class="relative text-base sm:text-xl text-gray-200 leading-relaxed font-serif drop-shadow-md">
-      A pact of <span class="text-red-400 font-bold">blood</span>, 
-      <span class="text-blue-400 font-bold">sweat</span>, 
-      and <span class="text-purple-400 font-bold italic">tilted tears</span>. <br><br>
-      From this moment forward, we ride into 
-      <span class="text-blue-300 font-extrabold">Summoner’s Rift</span> not as two players, 
-      but as one <span class="text-yellow-400 font-semibold">duo</span>...<br><br>
-      Now… lock in your champ, and let 
-      <span class="text-yellow-400 font-bold tracking-widest uppercase">destiny</span> begin!
-    </p>
-
-    <div class="relative mt-6 sm:mt-8 text-yellow-300 font-extrabold text-lg sm:text-2xl tracking-widest 
-                drop-shadow-[0_0_12px_#facc15] animate-pulse">
-      ✨ United We Tilt, United We Climb ✨
-      <br>Ra Open kana BOBO</br>
-    </div>
-  </div>
 </div>
 
-<!-- After Decline -->
-<div id="declined" class="hidden fixed inset-0 flex items-center justify-center bg-black/95 z-50 p-4">
-  <div class="relative w-full max-w-2xl p-6 sm:p-8 rounded-2xl bg-gradient-to-b from-[#0f0f0f]/95 via-[#1a1a1a]/95 to-[#0f0f0f]/95 
-              border-4 border-yellow-400/70 shadow-[0_0_30px_rgba(250,204,21,0.6)] text-center">
+<!-- Accepted/Declined screens -->
+<div id="accepted" class="accepted-screen hidden">
+  ⚔️ Your best friend accepted! <br> Now you ride together into Summoner’s Rift! <br><br>
+  United in battle, nothing can break your bond!
+</div>
 
-    <div class="absolute -inset-1 rounded-2xl border-2 border-yellow-400/40 blur-lg animate-pulse"></div>
-
-    <h2 class="relative text-2xl sm:text-3xl font-extrabold text-yellow-300 mb-4 sm:mb-6 tracking-wide drop-shadow-[0_0_8px_#facc15]">
-      ❌ Summoner’s Betrayal
-      <br>Putangina mo traydorrrrrrr</br>
-    </h2>
-
-    <p class="relative text-base sm:text-lg text-gray-200 leading-relaxed font-serif drop-shadow-md">
-      Ahem… my dear <span class="text-yellow-400 font-semibold">summoner</span>, my so-called <span class="italic">best friend</span>.<br><br>
-      Today, you have committed the <span class="text-red-400 font-bold">greatest betrayal</span> known to man. 
-      Not stealing my food, not spoiling anime endings… no.<br><br>
-      You <span class="text-yellow-500 font-bold underline">declined</span> my sacred invitation... 
-    </p>
-
-    <div class="relative mt-6 sm:mt-8 text-yellow-300 font-bold text-lg sm:text-xl tracking-wide drop-shadow-[0_0_8px_#facc15] animate-pulse">
-      Your absence will echo across the Rift...
-    </div>
-  </div>
+<div id="declined" class="declined-screen hidden">
+  ❌ Your best friend declined... <br> The Rift feels emptier now. <br><br>
+  Sometimes friendships are tested, even in League.
 </div>
 
 <script>
-  window.addEventListener("load", () => {
-    const popup = document.getElementById("match-popup");
-    const popupBox = popup.querySelector(".circle-container");
-    const circle = document.querySelector(".circle-progress");
+window.addEventListener("load", () => {
+  const bg = document.getElementById("bg");
+  const popup = document.getElementById("match-popup");
+  const circleContainer = popup.querySelector(".circle-container");
+  const circle = popup.querySelector(".circle-progress");
+  const acceptBtn = document.getElementById("acceptBtn");
+  const declineBtn = document.getElementById("declineBtn");
+  const accepted = document.getElementById("accepted");
+  const declined = document.getElementById("declined");
 
-    const accepted = document.getElementById("accepted");
-    const declined = document.getElementById("declined");
+  // Background images
+  const backgroundImages = [
+    "LolBg/1.jpg","LolBg/2.jpg","LolBg/3.jpg","LolBg/4.jpg","LolBg/5.jpg",
+    "LolBg/6.jpg","LolBg/7.jpg","LolBg/8.jpg","LolBg/9.jpg","LolBg/10.jpg",
+    "LolBg/11.jpg","LolBg/12.jpg","LolBg/13.jpg","LolBg/14.jpg","LolBg/15.jpg"
+  ];
 
-    let countdown = 15;
-    const radius = 140;
-    const circumference = 2 * Math.PI * radius;
-    circle.style.strokeDasharray = circumference;
-    circle.style.strokeDashoffset = 0;
+  let index = 0;
+  setInterval(() => {
+    bg.style.backgroundImage = `url('${backgroundImages[index]}')`;
+    index = (index + 1) % backgroundImages.length;
+  }, 1000);
 
-    setTimeout(() => {
-      popupBox.style.opacity = "1";
-      popupBox.style.transform = "scale(1)";
+  // Circle countdown
+  const radius = 140;
+  const circumference = 2 * Math.PI * radius;
+  circle.style.strokeDasharray = circumference;
+  circle.style.strokeDashoffset = 0;
 
-      let timer = setInterval(() => {
-        countdown--;
-        const offset = circumference - (countdown / 15) * circumference;
-        circle.style.strokeDashoffset = offset;
+  // Animate popup in
+  setTimeout(() => {
+    circleContainer.style.opacity = 1;
+    circleContainer.style.transform = "scale(1)";
+  }, 100);
 
-        if (countdown <= 0) {
-          clearInterval(timer);
-          decline();
-        }
-      }, 1000);
+  const duration = 15;
+  const startTime = Date.now();
 
-      document.getElementById("acceptBtn").addEventListener("click", () => {
-        clearInterval(timer);
-        popup.style.display = "none";
-        accepted.classList.remove("hidden");
-      });
+  function animateCircle() {
+    const elapsed = (Date.now() - startTime) / 1000;
+    const progress = Math.max(0, duration - elapsed);
+    circle.style.strokeDashoffset = circumference * (elapsed / duration);
 
-      document.getElementById("declineBtn").addEventListener("click", () => {
-        clearInterval(timer);
-        decline();
-      });
+    if(progress > 0) requestAnimationFrame(animateCircle);
+    else handleDecline();
+  }
+  requestAnimationFrame(animateCircle);
 
-      function decline() {
-        popup.style.display = "none";
-        declined.classList.remove("hidden");
-      }
-    }, 300);
+  acceptBtn.addEventListener("click", () => {
+    circleContainer.style.display = "none";
+    accepted.classList.remove("hidden");
   });
-</script>
-<<<<<<< HEAD
 
-<script>
-  window.addEventListener("load", () => {
-    const popup = document.getElementById("match-popup");
-    const popupBox = popup.querySelector(".circle-container");
-    const circle = document.querySelector(".circle-progress");
+  declineBtn.addEventListener("click", handleDecline);
 
-    const accepted = document.getElementById("accepted");
-    const declined = document.getElementById("declined");
-
-    let countdown = 15;
-    const radius = 140;
-    const circumference = 2 * Math.PI * radius;
-    circle.style.strokeDasharray = circumference;
-    circle.style.strokeDashoffset = 0;
-
-    setTimeout(() => {
-      popupBox.style.opacity = "1";
-      popupBox.style.transform = "scale(1)";
-
-      let timer = setInterval(() => {
-        countdown--;
-        const offset = circumference - (countdown / 15) * circumference;
-        circle.style.strokeDashoffset = offset;
-
-        if (countdown <= 0) {
-          clearInterval(timer);
-          decline();
-        }
-      }, 1000);
-
-      document.getElementById("acceptBtn").addEventListener("click", () => {
-        clearInterval(timer);
-        popup.style.display = "none";
-        accepted.classList.remove("hidden");
-
-        // Open Messenger with prefilled message
-        window.open(
-          "https://www.facebook.com/messages/t/9742696475822972?message=I%20accepted%20the%20match!",
-          "_blank"
-        );
-      });
-
-      document.getElementById("declineBtn").addEventListener("click", () => {
-        clearInterval(timer);
-        decline();
-
-        // Open Messenger with prefilled message
-        window.open(
-          "https://www.facebook.com/messages/t/9742696475822972?message=I%20declined%20the%20match!",
-          "_blank"
-        );
-      });
-
-      function decline() {
-        popup.style.display = "none";
-        declined.classList.remove("hidden");
-      }
-    }, 300);
-  });
+  function handleDecline() {
+    circleContainer.style.display = "none";
+    declined.classList.remove("hidden");
+  }
+});
 </script>
 
-=======
->>>>>>> fbe2780413d23ae84dc35ad429c8c60fab4b6dcc
 </body>
 </html>
