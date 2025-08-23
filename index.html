@@ -131,14 +131,78 @@ circle {
 
 <!-- Accepted/Declined screens -->
 <div id="accepted" class="accepted-screen hidden">
-  ⚔️ Your best friend accepted! <br> Now you ride together into Summoner’s Rift! <br><br>
-  United in battle, nothing can break your bond!
+  <div class="lol-screen-container accepted-theme">
+    <h2 class="lol-screen-title">MATCH ACCEPTED!</h2>
+    <p class="lol-screen-text">
+      “Yesss! I knew you’d join me! This isn’t just another game—it’s us, side by side, laughing at our fails, celebrating the crazy plays, and just… enjoying every ridiculous moment together.
+      <br><br>
+      I’ve been waiting for this all day! Nothing feels quite right until you’re here. Every victory is sweeter, every comeback is crazier, and even every defeat feels better when we’re in it together.
+      <br><br>
+      Let’s go make some memories, break some records, and have the kind of match we’ll still be talking about weeks from now. I’m so pumped—you ready to carry me and also let me carry you? Let’s do this!”
+    </p>
+  </div>
 </div>
 
 <div id="declined" class="declined-screen hidden">
-  ❌ Your best friend declined... <br> The Rift feels emptier now. <br><br>
-  Sometimes friendships are tested, even in League.
+  <div class="lol-screen-container declined-theme">
+    <h2 class="lol-screen-title">MATCH DECLINED</h2>
+    <p class="lol-screen-text">
+      “Ah… I get it. You’re busy, or maybe you just don’t feel like playing today. I thought we’d have this match together, side by side, laughing at our fails, cheering at our wins… like we always do.
+      <br><br>
+      It’s not just about the game. It’s about the time we spend together, the stupid jokes, the late-night strategies, the moments where we actually felt unstoppable. And now… it feels like a little piece of that disappears when you say no.
+      <br><br>
+      I know I can’t make you play, and I’m not mad. I just… miss those moments with you. I guess I’ll just queue up and hope you join me next time, because honestly, it’s not the victory that matters—it’s having you there.”
+    </p>
+  </div>
 </div>
+
+<style>
+.lol-screen-container {
+  max-width: 700px;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 0 40px rgba(0,0,0,0.7);
+  border: 6px solid transparent;
+  text-align: center;
+  font-family: "Friz Quadrata", serif; /* LoL-inspired font */
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.lol-screen-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+
+.lol-screen-text {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #f0e68c;
+  text-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+
+/* Accepted theme - gold / bright */
+.accepted-theme {
+  background: linear-gradient(135deg, #111, #333);
+  border-image: linear-gradient(to right, #facc15, #ffec99) 1;
+  box-shadow: 0 0 50px #facc15;
+}
+
+/* Declined theme - red / dark */
+.declined-theme {
+  background: linear-gradient(135deg, #220000, #330000);
+  border-image: linear-gradient(to right, #dc2626, #ff4d4d) 1;
+  box-shadow: 0 0 50px #dc2626;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.9);}
+  to {opacity: 1; transform: scale(1);}
+}
+</style>
+
 
 <script>
 window.addEventListener("load", () => {
